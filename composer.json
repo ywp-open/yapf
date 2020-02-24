@@ -1,0 +1,19 @@
+{
+    "name": "yapf/yapf",
+    "description": "yet another php framework",
+    "authors": [
+        {
+            "name": "wp.y",
+            "email": "wp.y@outlook.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "catfan/medoo": "^1.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Yapf\\": "src/"
+        }
+    }
+}
