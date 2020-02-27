@@ -1,31 +1,57 @@
 <?php
 namespace Yapf;
-use Medoo\Medoo;
-class Model extends Medoo
-{
-    private static ?Model $dao = null;
+use Yapf\DB as db;
 
-    private function __construct(array $db_param)
-    {
-        parent::__construct($db_param);
+abstract class Model{
+    private string $table;
+    private array $field = array();
+
+    protected function __construct(string $table){
+        $this->table = $table;
     }
 
-    protected static function getObject(array $db_param):Model
-    {
-        if(is_null(self::$dao)){
-            self::$dao = new self($db_param);
+    public function set($name,$value){
+        $this->field[$name] = $value;
+        return $this;
+    }
+
+    public function save():int {
+        return db::dao()->insert($this->table,$this->field)->rowCount();
+    }
+
+    public function update(array $where):int {
+        return db::dao()->update($this->table,$this->field,$where)->rowCount();
+    }
+
+    public function findAll(array $field=array(),string $where='',string $order='id desc'):array {
+        $sql = 'select ';
+        if($field){
+            $sql .= implode(',',$field);
         }
-        return self::$dao;
+        else{
+            $sql .= '*';
+        }
+        $sql .= ' from '.$this->table;
+        if($where){
+            $sql .= ' where '.$where;
+        }
+        $sql .= ' order by '.$order;
+        return db::findAll($sql);
     }
 
-    public function findSql(string $sql,array $where=array()):array
-    {
-        return parent::query($sql,$where)->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    public function findSqlOne(string $sql,array $where=array()):?array
-    {
-        $data = parent::query($sql,$where)->fetch(\PDO::FETCH_ASSOC);
-        return $data?$data:null;
+    public function findFirst(array $field=array(),string $where=''):?array {
+        $sql = 'select ';
+        if($field){
+            $sql .= implode(',',$field);
+        }
+        else{
+            $sql .= '*';
+        }
+        $sql .= ' from ' . $this->table;
+        if($where){
+            $sql .= ' where ' . $where;
+        }
+        $data = db::findFirst($sql);
+        return $data;
     }
 }

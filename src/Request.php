@@ -38,7 +38,7 @@ class Request
         return $arr;
     }
 
-    public function getServerVar(string $key)
+    public function getServerVar(string $key):?string
     {
         return $_SERVER[strtoupper($key)];
     }
