@@ -3,10 +3,8 @@ namespace Yapf;
 use Yapf\Route;
 use Yapf\Request;
 
-class Bootstrap
-{
-    public function run():void
-    {
+class Bootstrap{
+    public function run():void{
         $request = Request::getInstance();
         $uri = $request->getServerVar('request_uri');
         $uri = explode('?',$uri);

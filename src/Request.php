@@ -1,22 +1,19 @@
 <?php
 namespace Yapf;
 
-class Request
-{
+class Request{
     private static ?Request $instance = null;
 
     private function __construct(){}
 
-    public static function getInstance()
-    {
+    public static function getInstance():Request{
         if(is_null(self::$instance)){
             return new self;
         }
         return self::$instance;
     }
 
-    public function getHeaderEntry(string $key):?string
-    {
+    public function getHeaderEntry(string $key):?string{
         foreach($_SERVER as $k=>$v){
             if(substr($k,0,5)=='HTTP_'){
                 if('HTTP_'.strtoupper($key)==$k){
@@ -27,8 +24,7 @@ class Request
         return null;
     }
 
-    public function getHeaderAll():array
-    {
+    public function getHeaderAll():array{
         $arr = array();
         foreach($_SERVER as $key=>$v){
             if(substr($key,0,5)=='HTTP_'){
@@ -38,18 +34,15 @@ class Request
         return $arr;
     }
 
-    public function getServerVar(string $key):?string
-    {
+    public function getServerVar(string $key):?string{
         return $_SERVER[strtoupper($key)];
     }
 
-    public function requestMethod():string
-    {
+    public function requestMethod():string{
         return $this->getServerVar('request_method');
     }
 
-    public function getQStrInt(string $key,int $defaults=0):int
-    {
+    public function getQStrInt(string $key,int $defaults=0):int{
         if(array_key_exists($key,$_GET)){
             return intval($_GET[$key]);
         }
@@ -58,8 +51,7 @@ class Request
         }
     }
 
-    public function getQStr(string $key,string $defaults=''):string
-    {
+    public function getQStr(string $key,string $defaults=''):string{
         if(array_key_exists($key,$_GET)){
             return $_GET[$key];
         }
@@ -68,8 +60,7 @@ class Request
         }
     }
 
-    public function getPost(string $key,string $default=''):string
-    {
+    public function getPost(string $key,string $default=''):string{
         if(array_key_exists($key,$_POST)){
             return $_POST[$key];
         }
@@ -78,8 +69,7 @@ class Request
         }
     }
 
-    public function getPostInt(string $key,int $default=0):int
-    {
+    public function getPostInt(string $key,int $default=0):int{
         if(array_key_exists($key,$_POST)){
             return intval($_POST[$key]);
         }
@@ -88,8 +78,7 @@ class Request
         }
     }
 
-    public function getPostObject(string $key):?object
-    {
+    public function getPostObject(string $key):?object{
         if(array_key_exists($key,$_POST)){
             return (object)$_POST[$key];
         }
@@ -98,8 +87,7 @@ class Request
         }
     }
 
-    public function bodyjson():?object
-    {
+    public function bodyjson():?object{
         $body = file_get_contents('php://input');
         return $body?json_decode($body):null;
     }

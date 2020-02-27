@@ -10,7 +10,7 @@ abstract class Model{
         $this->table = $table;
     }
 
-    public function set($name,$value){
+    public function set($name,$value):Model {
         $this->field[$name] = $value;
         return $this;
     }
