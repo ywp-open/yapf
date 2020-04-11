@@ -9,20 +9,26 @@ abstract class Model{
     protected function __construct(string $table){
         $this->table = $table;
     }
-
-    public function set($name,$value):Model {
+    public static function dao():self {
+        if(!isset(static::$dao)){
+            throw new \Exception(static::class.' missing variable protected static $dao');
+        }
+        if(is_null(static::$dao)){
+            static::$dao = new static();
+            return static::$dao;
+        }
+        return static::$dao;
+    }
+    public function set($name,$value):self {
         $this->field[$name] = $value;
         return $this;
     }
-
     public function save():int {
         return db::dao()->insert($this->table,$this->field)->rowCount();
     }
-
     public function update(array $where):int {
         return db::dao()->update($this->table,$this->field,$where)->rowCount();
     }
-
     public function findAll(array $field=array(),string $where='',string $order='id desc'):array {
         $sql = 'select ';
         if($field){
@@ -38,7 +44,6 @@ abstract class Model{
         $sql .= ' order by '.$order;
         return db::findAll($sql);
     }
-
     public function findFirst(array $field=array(),string $where=''):?array {
         $sql = 'select ';
         if($field){
