@@ -10,7 +10,7 @@ abstract class Model{
         $this->table = $table;
     }
     public static function dao():self {
-        if(!isset(static::$dao)){
+        if(!property_exists(static::class,'dao')){
             throw new \Exception(static::class.' missing variable protected static $dao');
         }
         if(is_null(static::$dao)){
