@@ -3,7 +3,7 @@ namespace Yapf;
 use Medoo\Medoo;
 
 class DB extends Medoo{
-    private static Medoo $dao;
+    private static ?Medoo $dao = null;
 
     private function __construct(array $options){
         parent::__construct($options);
