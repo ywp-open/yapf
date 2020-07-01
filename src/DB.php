@@ -13,7 +13,7 @@ class DB extends Medoo{
         self::$dao = new self($options);
     }
 
-    public static function dao(){
+    public static function dao():Medoo{
         return self::$dao;
     }
 

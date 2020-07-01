@@ -59,4 +59,8 @@ abstract class Model{
         $data = db::findFirst($sql);
         return $data;
     }
+    public function delete(array $where):int {
+        $ret = db::dao()->delete($this->table,$where);
+        return $ret->rowCount();
+    }
 }
