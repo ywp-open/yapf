@@ -9,6 +9,7 @@ abstract class Model{
     protected function __construct(string $table){
         $this->table = $table;
     }
+
     public static function dao():self {
         if(!property_exists(static::class,'dao')){
             throw new \Exception(static::class.' missing variable protected static $dao');
@@ -19,17 +20,27 @@ abstract class Model{
         }
         return static::$dao;
     }
+
     public function set($name,$value):self {
         $this->field[$name] = $value;
         return $this;
     }
+
     public function save():int {
+        if(!$this->field){
+            throw new \Exception('nothing data');
+        }
         return db::dao()->insert($this->table,$this->field)->rowCount();
     }
+
     public function update(array $where):int {
+        if(!$this->field){
+            throw new \Exception('nothing data');
+        }
         return db::dao()->update($this->table,$this->field,$where)->rowCount();
     }
-    public function findAll(array $field=array(),string $where='',string $order='id desc'):array {
+
+    public function findAll(string $where='',array $field=array(),string $order='id desc'):array {
         $sql = 'select ';
         if($field){
             $sql .= implode(',',$field);
@@ -44,7 +55,8 @@ abstract class Model{
         $sql .= ' order by '.$order;
         return db::findAll($sql);
     }
-    public function findFirst(array $field=array(),string $where=''):?array {
+
+    public function findFirst(string $where='',array $field=array()):?array {
         $sql = 'select ';
         if($field){
             $sql .= implode(',',$field);
@@ -59,6 +71,7 @@ abstract class Model{
         $data = db::findFirst($sql);
         return $data;
     }
+
     public function delete(array $where):int {
         $ret = db::dao()->delete($this->table,$where);
         return $ret->rowCount();
