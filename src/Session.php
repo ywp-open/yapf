@@ -3,7 +3,10 @@ namespace Yapf;
 
 class Session{
     public function __construct(){
-        session_start();
+        //session_start();
+      if(ini_get('session.auto_start')!='1'){
+        throw new \Exception('needed setting `session.auto_start=1` in php.ini');
+      }
     }
 
     public function __get($name):?string{
