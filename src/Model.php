@@ -71,4 +71,22 @@ abstract class Model{
     $ret = db::dao()->delete(static::$table,$where);
     return $ret->rowCount();
   }
+
+  public function pagination(int $page,int $size,string $where=null,string $field=null,string $order="id desc"):array{
+    $offset = $page * $size;
+    $sql = 'select ';
+    if($field){
+      $sql .= $field;
+    }
+    else{
+      $sql .= '*';
+    }
+    $sql .= ' from ' .static::$table;
+    if($where){
+      $sql .= ' where ' . $where;
+    }
+    $sql .= ' order by ' . $order;
+    $sql .= " limit {$offset},{$size}" ;
+    return db::findAll($sql);
+  }
 }
