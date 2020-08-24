@@ -1,49 +1,75 @@
 <?php
+
 namespace Yapf;
 
-class Route{
-    private static array $array = array();
-    private string $uri;
-    private array $controller;
-    private static ?Route $instance = null;
+class Route
+{
+    private static array $_routes = array();
+    private string $_uri;
+    private array $_controller;
+    private static ?Route $_instance = null;
 
-    private function __construct(){}
-
-    public static function getInstance():Route{
-        if(!self::$instance){
-            self::$instance  = new self();
-        }
-        return self::$instance;
+    private function __construct()
+    {
     }
 
-    public static function add(string $key,array $obj){
-        if(array_key_exists($key,self::$array)){
+    public static function getInstance(): Route
+    {
+        if (!self::$_instance) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * @param array|string $obj
+     */
+    public static function add(string $key, $obj)
+    {
+        $hash = hash('crc32b',$key);
+        if (array_key_exists($hash, self::$_routes)) {
             throw new \Exception('has duplicate key');
         }
-        else{
-            self::$array[$key] = $obj;
+        else {
+            self::$_routes[$hash] = $obj;
         }
     }
 
-    public function getAllEntry():array{
-        return self::$array;
+    public function getAllEntry(): array
+    {
+        return self::$_routes;
     }
 
-    public function findEntry(string $uri):array{
-        $isfind = array_key_exists($uri,self::$array);
-        if(!$isfind){
+    public function findEntry(string $uri): array
+    {
+        $this->_uri = $uri;
+
+        $hash = hash('crc32b',$uri);
+        $isfind = array_key_exists($hash, self::$_routes);
+        if (!$isfind) {
             throw new \Exception('not has uri');
         }
-        $this->uri = $uri;
-        $this->controller = self::$array[$uri];
-        return $this->controller;
+
+        $contrl = self::$_routes[$hash];
+        if(!is_array($contrl)){
+            $uris = explode('/',$uri);
+            $action = strtolower($uris[count($uris)-1]);
+            $this->_controller = [$contrl,$action];
+        }
+        else{
+            $this->_controller = self::$_routes[$hash];
+        }
+
+        return $this->_controller;
     }
 
-    public function getUri():string {
-        return $this->uri;
+    public function getUri(): string
+    {
+        return $this->_uri;
     }
 
-    public function getController():array {
-        return $this->controller;
+    public function getController(): array
+    {
+        return $this->_controller;
     }
 }

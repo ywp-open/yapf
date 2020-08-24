@@ -1,30 +1,44 @@
 <?php
 namespace Yapf;
 
-class Session{
-    public function __construct(){
-        //session_start();
-      if(ini_get('session.auto_start')!='1'){
-        throw new \Exception('needed setting `session.auto_start=1` in php.ini');
-      }
+class Session
+{
+    private static int $_is_start = 0;
+    private static ?Session $_self = null;
+
+    private function __construct(){}
+
+    public static function getInstance():Session
+    {
+        if(self::$_is_start==0){
+            session_start();
+            self::$_is_start = 1;
+        }
+        if(is_null(self::$_self)){
+            self::$_self = new self();
+        }
+        return self::$_self;
     }
 
-    public function __get($name):?string{
-        if(!array_key_exists($name,$_SESSION)){
+    public function __get($name): ?string
+    {
+        if (!array_key_exists($name, $_SESSION)) {
             return null;
         }
         return $_SESSION[$name];
     }
 
-    public function __set($name, $value){
-        if(array_key_exists($name,$_SESSION)){
+    public function __set($name, $value)
+    {
+        if (array_key_exists($name, $_SESSION)) {
             throw new \Exception('session key has existed');
         }
         $_SESSION[$name] = $value;
     }
 
-    public function __call($name, $arguments){
-        switch($name){
+    public function __call($name, $arguments)
+    {
+        switch ($name) {
             case 'get':
                 return $this->{$arguments[0]};
                 break;
@@ -34,11 +48,13 @@ class Session{
         }
     }
 
-    public function get(string $name):?string{
+    public function get(string $name): ?string
+    {
         return $this->$name;
     }
 
-    public function set(string $name,string $value){
+    public function set(string $name, string $value)
+    {
         $this->$name = $value;
     }
 }
