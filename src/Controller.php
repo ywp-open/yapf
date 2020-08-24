@@ -28,9 +28,11 @@ class Controller
     {
         if (is_int($default)) {
             return $this->request->getQStrInt($key, $default);
-        } else if (is_string($default)) {
+        }
+        else if (is_string($default)) {
             return $this->request->getQStr($key, $default);
-        } else {
+        }
+        else {
             throw new \Exception("'default' paramater needed a value");
         }
     }
@@ -39,10 +41,15 @@ class Controller
     {
         if (is_int($default)) {
             return $this->request->getPostInt($key, $default);
-        } else if (is_string($default)) {
+        }
+        else if (is_string($default)) {
             return $this->request->getPost($key, $default);
-        } else if (is_null($default)) {
+        }
+        else if (is_null($default)) {
             return $this->request->getPostObject($key);
+        }
+        else{
+            throw new \Exception("'default' paramater needed a value");
         }
     }
 
@@ -62,12 +69,12 @@ class Controller
     protected function isGet(): bool
     {
         $method = $this->request->requestMethod();
-        return $method == 'GET' ? true : false;
+        return $method === 'GET' ? true : false;
     }
 
     protected function isPost(): bool
     {
         $method = $this->request->requestMethod();
-        return $method == 'POST' ? true : false;
+        return $method === 'POST' ? true : false;
     }
 }

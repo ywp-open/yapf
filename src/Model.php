@@ -123,4 +123,6 @@ abstract class Model
         $sql .= " limit {$offset},{$size}";
         return db::findAll($sql,$where_val);
     }
+
+
 }

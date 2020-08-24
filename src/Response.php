@@ -3,9 +3,7 @@ namespace Yapf;
 
 class Response
 {
-    public function __construct()
-    {
-    }
+    public function __construct(){}
 
     /**
      * @param $v string|array|object
