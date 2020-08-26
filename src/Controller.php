@@ -66,15 +66,20 @@ class Controller
         $this->response->json($code, $v);
     }
 
+    public function render(string $file_path,array $data=array())
+    {
+        $this->response->render($file_path,$data);
+    }
+
     protected function isGet(): bool
     {
         $method = $this->request->requestMethod();
-        return $method === 'GET' ? true : false;
+        return $method === 'GET';
     }
 
     protected function isPost(): bool
     {
         $method = $this->request->requestMethod();
-        return $method === 'POST' ? true : false;
+        return $method === 'POST';
     }
 }
