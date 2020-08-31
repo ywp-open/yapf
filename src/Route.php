@@ -46,8 +46,15 @@ class Route
 
         $hash = hash('crc32b',$uri);
         $isfind = array_key_exists($hash, self::$_routes);
-        if (!$isfind) {
-            throw new \Exception('not has uri');
+        if(!$isfind){
+            $uris = explode('/',$uri);
+            array_pop($uris);
+            $uri_str = implode('/',$uris);
+            $hash = hash('crc32b',$uri_str);
+            $isfind = array_key_exists($hash,self::$_routes);
+            if(!$isfind){
+                throw new \Exception('not has uri');
+            }
         }
 
         $contrl = self::$_routes[$hash];
