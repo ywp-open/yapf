@@ -21,9 +21,14 @@ abstract class Model
         return self::$_dao[$md5_str];
     }
 
-    public function id()
+    public function id():int
     {
         return db::dao()->id();
+    }
+
+    public function lastLog():string
+    {
+        return db::dao()->last();
     }
 
     public function setData(string $key, string $value): self
