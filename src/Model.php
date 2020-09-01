@@ -97,27 +97,27 @@ abstract class Model
         return $this;
     }
 
-    public function findAll(array $where_val=array(), string $order = 'id desc'): array
+    public function findAll(?array $where_val=array(), string $order = 'id desc'): array
     {
         $sql = "select {$this->_field} from " . static::$table;
         if($this->_where){
             $sql .= ' where ' . $this->_where;
         }
         $sql .= ' order by ' . $order;
-        return db::findAll($sql,$where_val);
+        return db::findAll($sql,$where_val??[]);
     }
 
-    public function findFirst(array $where_val=array()): ?array
+    public function findFirst(?array $where_val=array()): ?array
     {
         $sql = "select {$this->_field} from " . static::$table;
         if ($this->_where) {
             $sql .= ' where ' . $this->_where;
         }
-        $data = db::findFirst($sql,$where_val);
+        $data = db::findFirst($sql,$where_val??[]);
         return $data;
     }
 
-    public function pagination(int $page, int $size, array $where_val=array(), string $order = "id desc"): array
+    public function pagination(int $page, int $size, ?array $where_val=array(), string $order = "id desc"): array
     {
         $offset = ($page-1) * $size;
         $sql = "select {$this->_field} from " . static::$table;
@@ -126,7 +126,7 @@ abstract class Model
         }
         $sql .= ' order by ' . $order;
         $sql .= " limit {$offset},{$size}";
-        return db::findAll($sql,$where_val);
+        return db::findAll($sql,$where_val??[]);
     }
 
 
