@@ -117,8 +117,22 @@ abstract class Model
         return $data;
     }
 
-    public function pagination(int $page, int $size, ?array $where_val=array(), string $order = "id desc"): array
+    public function pagination(int $page, int $size, int $total_page=0, ?array $where_val=array(), string $order = "id desc"): array
     {
+        if($total_page==0){
+            $sql = "select count(id) as cid from " . static::$table;
+            if($this->_where){
+                $sql .= ' where ' . $this->_where;
+            }
+            $cid = db::findFirst($sql,$where_val)['cid'];
+            $total = $cid['cid'];
+            if(($total % $size)==0){
+                $total_page = $total / $size;
+            }
+            else{
+                $total_page = floor(($total / $size)) + 1;
+            }
+        }
         $offset = ($page-1) * $size;
         $sql = "select {$this->_field} from " . static::$table;
         if ($this->_where) {
@@ -126,7 +140,10 @@ abstract class Model
         }
         $sql .= ' order by ' . $order;
         $sql .= " limit {$offset},{$size}";
-        return db::findAll($sql,$where_val??[]);
+        return array(
+            'result'=>db::findAll($sql,$where_val??[]),
+            'totalPage'=>$total_page
+        );
     }
 
 
