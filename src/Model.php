@@ -124,7 +124,7 @@ abstract class Model
             if($this->_where){
                 $sql .= ' where ' . $this->_where;
             }
-            $total = db::findFirst($sql,$where_val)['cid'];
+            $total = db::findFirst($sql,$where_val??[])['cid'];
             if(($total % $size)==0){
                 $total_page = $total / $size;
             }
