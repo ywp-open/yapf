@@ -45,7 +45,7 @@ abstract class Model
 
     public function save(array $data=array()): int
     {
-        if (!$this->_data && $data) {
+        if (!$this->_data && !$data) {
             throw new \Exception('nothing data');
         }
         if($data){
